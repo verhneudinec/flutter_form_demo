@@ -74,8 +74,15 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
                 ),
               ),
               inputFormatters: [
-                //FilteringTextInputFormatter.digitsOnly,
+                FilteringTextInputFormatter.digitsOnly,
+                FilteringTextInputFormatter(
+                  RegExp(r'^[()\d - ]{1,20}$'),
+                  allow: true,
+                ),
               ],
+              validator: (value) => _validatePhoneNumber(value)
+                  ? null
+                  : 'Phone number must be entered as (XXX)XXX-XXXX',
             ),
             const SizedBox(
               height: 10,
@@ -85,6 +92,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
               keyboardType: TextInputType.emailAddress,
               decoration:
                   InputDecoration(labelText: "Email adress *", hintText: "@"),
+              validator: _validateEmail,
             ),
             const SizedBox(
               height: 10,
@@ -123,14 +131,16 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
                 ),
                 icon: Icon(Icons.security),
               ),
+              validator: _validatePassword,
             ),
             const SizedBox(
               height: 10,
             ),
             TextFormField(
-              controller: _passwordController,
+              controller: _confirmController,
               obscureText: _hidePassword,
               decoration: InputDecoration(labelText: "Confirm password *"),
+              validator: _validatePassword,
             ),
             const SizedBox(
               height: 15,
@@ -138,13 +148,15 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState.validate()) {
+                  _formKey.currentState.save();
+
                   print(_nameController.text);
                   print(_phoneController.text);
                   print(_emailController.text);
                   print(_aboutController.text);
                   print(_passwordController.text);
                 } else
-                  print("Не все поля заполнены");
+                  print("Form is not valid");
               },
               child: Text("Submit form"),
               style: ButtonStyle(
@@ -165,6 +177,31 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
       return 'Please enter alphabetical characters.';
     } else
       return null;
+  }
+
+  bool _validatePhoneNumber(String input) {
+    final _phoneExp = RegExp(r'^\(\d\d\d\)\d\d\d\-\d\d\d\d$');
+    return _phoneExp.hasMatch(input);
+  }
+
+  String _validateEmail(String value) {
+    if (value.isEmpty) {
+      return 'Email cannot be empty';
+    } else if (!_emailController.text.contains('@')) {
+      return 'Invalid email adress';
+    } else {
+      return null;
+    }
+  }
+
+  String _validatePassword(String value) {
+    if (_passwordController.text.length < 8) {
+      return '8 characters required for password';
+    } else if (_confirmController.text != _passwordController.text) {
+      return 'Passwords does not match';
+    } else {
+      return null;
+    }
   }
 
   @override
