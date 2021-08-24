@@ -21,6 +21,10 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
 
+  final _nameFocus = FocusNode();
+  final _phoneFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+
   final List<String> _countries = [
     'Russia',
     'Ukraine',
@@ -43,6 +47,15 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
           children: [
             TextFormField(
               controller: _nameController,
+              focusNode: _nameFocus,
+              autofocus: true,
+              onFieldSubmitted: (_) {
+                _fieldFocusChange(
+                  context,
+                  _nameFocus,
+                  _phoneFocus,
+                );
+              },
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.person),
                 labelText: "Full name *",
@@ -68,6 +81,14 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
             TextFormField(
               controller: _phoneController,
               keyboardType: TextInputType.phone,
+              focusNode: _phoneFocus,
+              onFieldSubmitted: (_) {
+                _fieldFocusChange(
+                  context,
+                  _phoneFocus,
+                  _passwordFocus,
+                );
+              },
               decoration: InputDecoration(
                 icon: Icon(Icons.ac_unit_outlined),
                 prefixIcon: Icon(Icons.call),
@@ -151,6 +172,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
             TextFormField(
               controller: _passwordController,
               obscureText: _hidePassword,
+              focusNode: _passwordFocus,
               maxLength: 8,
               decoration: InputDecoration(
                 labelText: "Password *",
@@ -239,6 +261,15 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
     }
   }
 
+  void _fieldFocusChange(
+    BuildContext context,
+    FocusNode currentFocus,
+    FocusNode nextFocus,
+  ) {
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -247,6 +278,11 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
     _aboutController.dispose();
     _passwordController.dispose();
     _confirmController.dispose();
+
+    _nameFocus.dispose();
+    _phoneFocus.dispose();
+    _passwordFocus.dispose();
+
     super.dispose();
   }
 }
