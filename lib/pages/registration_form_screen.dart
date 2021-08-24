@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class RegistrationForrmScreen extends StatefulWidget {
   const RegistrationForrmScreen({Key key}) : super(key: key);
@@ -10,6 +11,8 @@ class RegistrationForrmScreen extends StatefulWidget {
 
 class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
   bool _hidePassword = true;
+
+  final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -25,10 +28,11 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
         title: Text("Registration form"),
       ),
       body: Form(
+        key: _formKey,
         child: ListView(
           padding: EdgeInsets.all(16.0),
           children: [
-            TextField(
+            TextFormField(
               controller: _nameController,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.person),
@@ -47,6 +51,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
                   borderSide: BorderSide(color: Colors.blue),
                 ),
               ),
+              validator: _validateName,
             ),
             const SizedBox(
               height: 10,
@@ -68,6 +73,9 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
                   borderSide: BorderSide(color: Colors.blue),
                 ),
               ),
+              inputFormatters: [
+                //FilteringTextInputFormatter.digitsOnly,
+              ],
             ),
             const SizedBox(
               height: 10,
@@ -90,6 +98,9 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
                 helperText: "Keep it short",
                 border: OutlineInputBorder(),
               ),
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(100),
+              ],
             ),
             const SizedBox(
               height: 10,
@@ -126,11 +137,14 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                print(_nameController.text);
-                print(_phoneController.text);
-                print(_emailController.text);
-                print(_aboutController.text);
-                print(_passwordController.text);
+                if (_formKey.currentState.validate()) {
+                  print(_nameController.text);
+                  print(_phoneController.text);
+                  print(_emailController.text);
+                  print(_aboutController.text);
+                  print(_passwordController.text);
+                } else
+                  print("Не все поля заполнены");
               },
               child: Text("Submit form"),
               style: ButtonStyle(
@@ -141,6 +155,16 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
         ),
       ),
     );
+  }
+
+  String _validateName(String value) {
+    final _nameExp = RegExp(r'^[A-Za-z]+$');
+    if (value.isEmpty)
+      return 'Name is required';
+    else if (!_nameExp.hasMatch(value)) {
+      return 'Please enter alphabetical characters.';
+    } else
+      return null;
   }
 
   @override
