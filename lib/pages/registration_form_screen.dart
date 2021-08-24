@@ -13,6 +13,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
   bool _hidePassword = true;
 
   final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -37,6 +38,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Registration form"),
       ),
@@ -204,16 +206,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
-
-                  print(_nameController.text);
-                  print(_phoneController.text);
-                  print(_emailController.text);
-                  print(_aboutController.text);
-                  print(_passwordController.text);
-                } else
-                  print("Form is not valid");
+                _submitForm();
               },
               child: Text("Submit form"),
               style: ButtonStyle(
@@ -268,6 +261,32 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
   ) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+
+      print(_nameController.text);
+      print(_phoneController.text);
+      print(_emailController.text);
+      print(_aboutController.text);
+      print(_passwordController.text);
+    } else {
+      _showMessage(message: "Form is not valid");
+    }
+  }
+
+  void _showMessage({
+    String message,
+  }) {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        duration: Duration(seconds: 5), // провисит 5 секунд
+        backgroundColor: Colors.red,
+        content: Text(message),
+      ),
+    );
   }
 
   @override
