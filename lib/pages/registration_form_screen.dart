@@ -10,6 +10,14 @@ class RegistrationForrmScreen extends StatefulWidget {
 
 class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
   bool _hidePassword = true;
+
+  final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _aboutController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +29,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
           padding: EdgeInsets.all(16.0),
           children: [
             TextField(
+              controller: _nameController,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.person),
                 labelText: "Full name *",
@@ -43,6 +52,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
               height: 10,
             ),
             TextFormField(
+              controller: _phoneController,
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
                 icon: Icon(Icons.ac_unit_outlined),
@@ -63,6 +73,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
               height: 10,
             ),
             TextFormField(
+              controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               decoration:
                   InputDecoration(labelText: "Email adress *", hintText: "@"),
@@ -71,6 +82,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
               height: 10,
             ),
             TextFormField(
+              controller: _aboutController,
               maxLines: 3,
               decoration: InputDecoration(
                 labelText: "About me *",
@@ -83,6 +95,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
               height: 10,
             ),
             TextFormField(
+              controller: _passwordController,
               obscureText: _hidePassword,
               maxLength: 8,
               decoration: InputDecoration(
@@ -104,16 +117,21 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
               height: 10,
             ),
             TextFormField(
+              controller: _passwordController,
               obscureText: _hidePassword,
-
-              // Valid check
               decoration: InputDecoration(labelText: "Confirm password *"),
             ),
             const SizedBox(
               height: 15,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                print(_nameController.text);
+                print(_phoneController.text);
+                print(_emailController.text);
+                print(_aboutController.text);
+                print(_passwordController.text);
+              },
               child: Text("Submit form"),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.green),
@@ -123,5 +141,16 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _aboutController.dispose();
+    _passwordController.dispose();
+    _confirmController.dispose();
+    super.dispose();
   }
 }
