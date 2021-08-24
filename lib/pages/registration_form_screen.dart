@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:reborn_interaction_with_user_demo/model/user.dart';
+import 'package:reborn_interaction_with_user_demo/pages/user_info_screen.dart';
 
 class RegistrationForrmScreen extends StatefulWidget {
   const RegistrationForrmScreen({Key key}) : super(key: key);
@@ -34,6 +36,8 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
   ];
 
   String _selectedCountry;
+
+  User userData = User();
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +83,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
                 ),
               ),
               validator: _validateName,
+              onSaved: (value) => userData.name = value,
             ),
             const SizedBox(
               height: 10,
@@ -118,6 +123,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
               validator: (value) => _validatePhoneNumber(value)
                   ? null
                   : 'Phone number must be entered as (XXX)XXX-XXXX',
+              onSaved: (value) => userData.phone = value,
             ),
             const SizedBox(
               height: 10,
@@ -127,7 +133,8 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
               keyboardType: TextInputType.emailAddress,
               decoration:
                   InputDecoration(labelText: "Email adress *", hintText: "@"),
-              validator: _validateEmail,
+              //validator: _validateEmail,
+              onSaved: (value) => userData.email = value,
             ),
             const SizedBox(
               height: 10,
@@ -144,6 +151,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
               inputFormatters: [
                 LengthLimitingTextInputFormatter(100),
               ],
+              onSaved: (value) => userData.story = value,
             ),
             const SizedBox(
               height: 10,
@@ -170,6 +178,7 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
               validator: (val) {
                 return val == null ? 'Please select a country' : null;
               },
+              onSaved: (value) => userData.country = value,
             ),
             const SizedBox(
               height: 10,
@@ -304,7 +313,12 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserInfoScreen(userData: userData),
+                  ),
+                );
               },
               child: Text('Verified'),
             ),
