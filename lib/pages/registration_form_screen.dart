@@ -62,9 +62,12 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
                 prefixIcon: Icon(Icons.person),
                 labelText: "Full name *",
                 hintText: "What do people call you?",
-                suffixIcon: Icon(
-                  Icons.delete_outline,
-                  color: Colors.red,
+                suffixIcon: GestureDetector(
+                  onTap: () => _nameController.clear(),
+                  child: Icon(
+                    Icons.delete_outline,
+                    color: Colors.red,
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -106,9 +109,9 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
                 ),
               ),
               inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
+                //FilteringTextInputFormatter.digitsOnly,
                 FilteringTextInputFormatter(
-                  RegExp(r'^[()\d - ]{1,20}$'),
+                  RegExp(r'^[()\d \- ]{1,20}$'),
                   allow: true,
                 ),
               ],
@@ -272,6 +275,8 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
       print(_emailController.text);
       print(_aboutController.text);
       print(_passwordController.text);
+
+      _showDialog(name: _nameController.text);
     } else {
       _showMessage(message: "Form is not valid");
     }
@@ -286,6 +291,26 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
         backgroundColor: Colors.red,
         content: Text(message),
       ),
+    );
+  }
+
+  void _showDialog({String name}) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Registration successful'),
+          content: Text('$name, hello!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Verified'),
+            ),
+          ],
+        );
+      },
     );
   }
 
