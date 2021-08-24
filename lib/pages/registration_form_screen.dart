@@ -21,6 +21,15 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
 
+  final List<String> _countries = [
+    'Russia',
+    'Ukraine',
+    'Germany',
+    'Japan',
+  ];
+
+  String _selectedCountry;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,6 +118,32 @@ class _RegistrationForrmScreenState extends State<RegistrationForrmScreen> {
               inputFormatters: [
                 LengthLimitingTextInputFormatter(100),
               ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            DropdownButtonFormField(
+              items: _countries.map((country) {
+                return DropdownMenuItem(
+                  child: Text(country),
+                  value: country,
+                );
+              }).toList(),
+              onChanged: (data) {
+                print(data);
+                setState(() {
+                  _selectedCountry = data;
+                });
+              },
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                icon: Icon(Icons.map),
+                labelText: 'Country?',
+              ),
+              value: _selectedCountry,
+              validator: (val) {
+                return val == null ? 'Please select a country' : null;
+              },
             ),
             const SizedBox(
               height: 10,
